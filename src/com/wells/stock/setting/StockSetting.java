@@ -6,11 +6,12 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.util.Properties;
 
 import com.wells.stock.utility.Utility;
 
-public class StockSetting {
+public class StockSetting implements Serializable {
     public static final String Field_name = "名稱(股票號碼)";// 15
     public static final String Field_price = "現在價格";// 12
     public static final String Field_start_price = "開盤價格";// 12

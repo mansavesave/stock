@@ -10,6 +10,11 @@ import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -25,10 +30,11 @@ import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 
+import com.wells.stock.mode.Mode_find_low_variation;
 import com.wells.stock.setting.StockInfo;
 import com.wells.stock.setting.StockSetting;
 import com.wells.stock.utility.HistoryStockUtility;
-import com.wells.stock.utility.RealTimeStock;
+import com.wells.stock.utility.RealTimeStockUtility;
 import com.wells.stock.utility.RealTimeStockController;
 import com.wells.stock.utility.Utility;
 
@@ -188,13 +194,17 @@ public class MainUI {
 
             }
         });
-        
+
         mJButtonList.get(12).addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
                 // TODO Auto-generated method stub
                 appendText("click 12");
-                HistoryStockUtility historyStockUtility = new HistoryStockUtility("2002");
 
+                Controller controller = new Controller();
+                controller.click_12();
+
+                // final HistoryStockUtility historyStockUtility = new
+                // HistoryStockUtility("2002");
             }
         });
 
@@ -209,13 +219,13 @@ public class MainUI {
                 appendText("2330:" + StockSetting.getProperty("2330"));
             }
         });
-        
+
         mJButtonList.get(14).addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
                 // TODO Auto-generated method stub
                 appendText("click 14");
                 // RealTimeStock realTimeStock = new RealTimeStock("5371");
-                RealTimeStock realTimeStock = new RealTimeStock(new StockInfo("2353", "tse"));
+                RealTimeStockUtility realTimeStock = new RealTimeStockUtility(new StockInfo("2353", "tse"));
                 realTimeStock.init();
                 StockInfo stockInfo = realTimeStock.getData();
                 if (stockInfo != null) {

@@ -3,6 +3,7 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -14,7 +15,7 @@ import org.json.JSONObject;
 
 import com.wells.stock.setting.StockInfo;
 
-public class RealTimeStock {
+public class RealTimeStockUtility implements Serializable{
     static final String COOKIES_HEADER = "Set-Cookie";
     // static java.net.CookieManager msCookieManager = new
     // java.net.CookieManager();
@@ -36,7 +37,7 @@ public class RealTimeStock {
     // mCookieList = new ArrayList<String>();
     // }
 
-    public RealTimeStock(StockInfo stockInfo) {
+    public RealTimeStockUtility(StockInfo stockInfo) {
         mStockInfo = stockInfo;
         // mtockNum = stockInfo.numName;
         mCookieList = new ArrayList<String>();

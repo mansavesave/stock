@@ -1,25 +1,26 @@
 package com.wells.stock.utility;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.wells.stock.setting.StockInfo;
 import com.wells.stock.setting.StockSetting;
 
-public class RealTimeStockController {
+public class RealTimeStockController implements Serializable{
 
     ArrayList<StockInfo> mStockInfoList;
-    HashMap<StockInfo, RealTimeStock> mRealTimeStockMap;
+    HashMap<StockInfo, RealTimeStockUtility> mRealTimeStockMap;
 
     public RealTimeStockController() {
         mStockInfoList = new ArrayList<StockInfo>();
-        mRealTimeStockMap = new HashMap<StockInfo, RealTimeStock>();
+        mRealTimeStockMap = new HashMap<StockInfo, RealTimeStockUtility>();
 
         for (String stockNum[] : StockSetting.StockList) {
             StockInfo stockInfo = new StockInfo(stockNum[0], stockNum[1]);
             mStockInfoList.add(stockInfo);
 
-            RealTimeStock realTimeStock = new RealTimeStock(stockInfo);
+            RealTimeStockUtility realTimeStock = new RealTimeStockUtility(stockInfo);
             realTimeStock.init();
             mRealTimeStockMap.put(stockInfo, realTimeStock);
         }
@@ -35,7 +36,7 @@ public class RealTimeStockController {
         stringbuilder.append(title + "\n");
 
         for (StockInfo eachStockInfo : mStockInfoList) {
-            RealTimeStock realTimeStock = mRealTimeStockMap.get(eachStockInfo);
+            RealTimeStockUtility realTimeStock = mRealTimeStockMap.get(eachStockInfo);
             StockInfo stockInfo = realTimeStock.getData();
             if (stockInfo != null) {
                 stringbuilder.append(stockInfo.getDisplayLine() + "\n");
