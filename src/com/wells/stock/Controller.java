@@ -2,8 +2,8 @@ package com.wells.stock;
 
 import java.io.Serializable;
 
+import com.wells.stock.crawl.HistoryStockUtility;
 import com.wells.stock.mode.Mode_find_low_variation;
-import com.wells.stock.utility.HistoryStockUtility;
 
 public class Controller implements Serializable {
 
@@ -27,7 +27,7 @@ public class Controller implements Serializable {
 
         };
 
-        final HistoryStockUtility historyStockUtility = HistoryStockUtility.getInstance("2353",
+        final HistoryStockUtility historyStockUtility = HistoryStockUtility.getInstance("2420",
                 callback);
     }
 

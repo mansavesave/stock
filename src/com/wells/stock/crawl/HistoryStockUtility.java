@@ -1,4 +1,4 @@
-package com.wells.stock.utility;
+package com.wells.stock.crawl;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -78,6 +78,11 @@ public class HistoryStockUtility implements Serializable {
             newObject = new HistoryStockUtility(stockNum, callBack);
             // 比較看是否有需要重新從網路上抓資料嗎？
             if (historyStockUtility != null) {
+                // for(String each :
+                // historyStockUtility.mTotal_querry_date_string_list) {
+                // System.out.println("each history:" + each);
+                //
+                // }
                 if (newObject.mTotal_querry_date_string_list
                         .equals(historyStockUtility.mTotal_querry_date_string_list)) {
                     isValid = true;
@@ -292,7 +297,8 @@ public class HistoryStockUtility implements Serializable {
             url = new URL(mQueryURL);
             HttpURLConnection httpFetchStockURLConnection = (HttpURLConnection) url
                     .openConnection();
-            httpFetchStockURLConnection.setRequestMethod("GET");
+            // httpFetchStockURLConnection.setRequestMethod("GET");
+            httpFetchStockURLConnection.setRequestMethod("POST");
             httpFetchStockURLConnection.setRequestProperty("User-Agent", "Mozilla/5.0");
             httpFetchStockURLConnection.setRequestProperty("Content-type",
                     "text/html;charset=UTF-8");

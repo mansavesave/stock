@@ -30,10 +30,10 @@ import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 
+import com.wells.stock.crawl.HistoryStockUtility;
 import com.wells.stock.mode.Mode_find_low_variation;
 import com.wells.stock.setting.StockInfo;
 import com.wells.stock.setting.StockSetting;
-import com.wells.stock.utility.HistoryStockUtility;
 import com.wells.stock.utility.RealTimeStockUtility;
 import com.wells.stock.utility.RealTimeStockController;
 import com.wells.stock.utility.Utility;

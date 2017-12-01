@@ -24,12 +24,14 @@ public class Mode_find_low_variation implements Serializable {
 
     ArrayList<Mode_find_low_variation_result_item> mResult;
 
-    double gap_variation = 0.02; // 漲跌幅度，正負都算
+    double gap_variation = 0.2; // 漲跌幅度，正負都算
     double mKeepDay = 15;
     boolean mExecuteCompleted = false;
 
     HashMap<String, HistoryStockInfo> mHistoryStockInfoMap;
     ArrayList<String> mSortedKey;
+
+    ArrayList<Boolean> mBooleanResult = new ArrayList<Boolean>();
 
     public Mode_find_low_variation(HashMap<String, HistoryStockInfo> map, ArrayList<String> sortKey) {
         mHistoryStockInfoMap = map;
@@ -42,6 +44,7 @@ public class Mode_find_low_variation implements Serializable {
 
             @Override
             public void run() {
+                mBooleanResult.clear();
                 // TODO Auto-generated method stub
                 if (mSortedKey != null && mHistoryStockInfoMap != null) {
                     ArrayList<String> overGapNode = new ArrayList<String>();// 所有超過漲跌幅度的日
@@ -90,7 +93,7 @@ public class Mode_find_low_variation implements Serializable {
                         }
 
                         int nowIndex = mSortedKey.indexOf(eachDay);
-                        int nextIndex = nowIndex + 30;
+                        int nextIndex = nowIndex + 50;
                         if (mSortedKey.size() > nextIndex) {
                             String nextStringKey = mSortedKey.get(nextIndex);
                             HistoryStockInfo next_historyStockInfo = mHistoryStockInfoMap
@@ -111,10 +114,30 @@ public class Mode_find_low_variation implements Serializable {
                                     / Double.parseDouble(targetPrice);
 
                             boolean success = false;
+                            if (gap > 0 && result_gap > 0) {
+                                if (Math.abs(gap) < Math.abs(result_gap)) {
+                                    success = true;
+                                }
+                            } else if (gap < 0 && result_gap < 0) {
+                                if (Math.abs(gap) < Math.abs(result_gap)) {
+                                    success = true;
+                                }
 
-                            String message = "gap(" + gap + ")" + "current:"
-                                    + current_historyStockInfo.endPrice + " targetPrice:"
-                                    + targetPrice + " result_gap:" + result_gap;
+                            } else {
+                                success = false;
+                            }
+                            mBooleanResult.add(success);
+
+                            String format = "percent(%.5f => %.5f) price(%s => %s) result(%b) %s";
+                            String message = String.format(format, gap, result_gap,
+                                    current_historyStockInfo.endPrice, targetPrice, success,
+                                    current_historyStockInfo.date);
+
+                            // String message = "percent(" + gap + ") => (" +
+                            // result_gap + "), price("
+                            // + current_historyStockInfo.endPrice + ") => (" +
+                            // targetPrice
+                            // + ")";
 
                             System.out.println(message);
 
@@ -122,6 +145,17 @@ public class Mode_find_low_variation implements Serializable {
 
                     }
 
+                }
+
+                int percentSuccessCount = 0;
+                for (boolean each : mBooleanResult) {
+                    if (each) {
+                        percentSuccessCount++;
+                    }
+                }
+                if (mBooleanResult.size() > 0) {
+                    System.out.println("Boolean Result:"
+                            + ((double) percentSuccessCount / mBooleanResult.size()));
                 }
 
                 mExecuteCompleted = true;
