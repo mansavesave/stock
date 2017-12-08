@@ -2,7 +2,8 @@ package com.wells.stock;
 
 import java.io.Serializable;
 
-import com.wells.stock.crawl.HistoryStockUtility;
+import com.wells.stock.crawl.HistoryStockFromTwseUtility;
+import com.wells.stock.data.StockInfoFile;
 import com.wells.stock.mode.Mode_find_low_variation;
 
 public class Controller implements Serializable {
@@ -16,19 +17,35 @@ public class Controller implements Serializable {
             @Override
             public void call(final Object object) {
                 // TODO Auto-generated method stub
-                final HistoryStockUtility local_historyStockUtility = (HistoryStockUtility) object;
+                final StockInfoFile stockInfoFile = (StockInfoFile) object;
 
-                Mode_find_low_variation mode_find_low_variation = new Mode_find_low_variation(
-                        local_historyStockUtility.getHistoryStockInfoMap(),
-                        local_historyStockUtility.getAll_Info_by_Day());
+                if (stockInfoFile != null) {
+                    if (!stockInfoFile.isSaved()) {
+                        stockInfoFile.save();
+                    }
 
-                mode_find_low_variation.execute();
+                    Mode_find_low_variation mode_find_low_variation = new Mode_find_low_variation(
+                            stockInfoFile.mStockInfoMap, stockInfoFile.mAllDayKey);
+
+                    mode_find_low_variation.execute();
+                }
+
             }
 
         };
 
-        final HistoryStockUtility historyStockUtility = HistoryStockUtility.getInstance("2420",
-                callback);
+        String stockNum = "2420";
+
+        StockInfoFile stockInfoFile = StockInfoFile.load(stockNum);
+        if (stockInfoFile == null) {
+            final HistoryStockFromTwseUtility historyStockFromTwseUtility = new HistoryStockFromTwseUtility(
+                    stockNum);
+
+            historyStockFromTwseUtility.doCrawl(callback);
+        } else {
+            callback.call(stockInfoFile);
+        }
+
     }
 
 }

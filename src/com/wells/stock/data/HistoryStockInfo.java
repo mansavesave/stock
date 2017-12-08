@@ -1,4 +1,4 @@
-package com.wells.stock.setting;
+package com.wells.stock.data;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

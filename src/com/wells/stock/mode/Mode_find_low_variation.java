@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.wells.stock.setting.HistoryStockInfo;
+import com.wells.stock.data.HistoryStockInfo;
 
 /**
  * 
