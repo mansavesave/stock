@@ -12,8 +12,8 @@ import java.util.HashMap;
 
 public class StockInfoFile implements Serializable {
     String mStockNum;
-    public ArrayList<String> mAllDayKey;//每一日, mStockInfoMap的key, ex 20171105
-    public HashMap<String, HistoryStockInfo> mStockInfoMap;//每一天相對應的HistoryStockInfo
+    public ArrayList<String> mAllDayKey;// 每一日, mStockInfoMap的key, ex 20171105
+    public HashMap<String, HistoryStockInfo> mStockInfoMap;// 每一天相對應的HistoryStockInfo
     boolean mIsSaved = false;
 
     public StockInfoFile(String stockNum, ArrayList<String> dayKey,
@@ -31,10 +31,15 @@ public class StockInfoFile implements Serializable {
         mStockInfoMap = map;
     }
 
-    public boolean isSaved() {
+    public static File getFolerToSave() {
         String work_path = System.getProperty("user.dir");
-        System.out.println("work_path: " + work_path);
-        File targetFile = new File(work_path, mStockNum);
+        File targetFile = new File(work_path, "save_data");
+        return targetFile;
+    }
+
+    public boolean isSaved() {
+        File folder = getFolerToSave();
+        File targetFile = new File(folder, mStockNum);
         if (targetFile.exists()) {
             return true;
         } else {
@@ -46,9 +51,14 @@ public class StockInfoFile implements Serializable {
         boolean result = false;
         ObjectOutputStream oos = null;
         try {// 儲存在工作目錄中
-            String work_path = System.getProperty("user.dir");
-            System.out.println("work_path: " + work_path);
-            File targetFile = new File(work_path, mStockNum);
+            File folder = getFolerToSave();
+            if (!folder.exists()) {
+                folder.mkdirs();
+            }
+            File targetFile = new File(folder, mStockNum);
+            if (targetFile.exists()) {
+                targetFile.delete();
+            }
 
             FileOutputStream fos = new FileOutputStream(targetFile);
             oos = new ObjectOutputStream(fos);
@@ -92,9 +102,10 @@ public class StockInfoFile implements Serializable {
         StockInfoFile stockInfoFile = null;
 
         try {
-            String work_path = System.getProperty("user.dir");
-            System.out.println("work_path: " + work_path);
-            File targetFile = new File(work_path, fileName);
+            // String work_path = System.getProperty("user.dir");
+            File folder = getFolerToSave();
+            // System.out.println("work_path: " + work_path);
+            File targetFile = new File(folder, fileName);
             if (targetFile.exists()) {
                 FileInputStream fis = new FileInputStream(targetFile);
                 ObjectInputStream ois = new ObjectInputStream(fis);
@@ -108,5 +119,20 @@ public class StockInfoFile implements Serializable {
         }
 
         return stockInfoFile;
+    }
+
+    public boolean isIncludeTheMonth(String yyyymmdd) {
+        System.out.println("+isIncludeTheMonth:" + yyyymmdd);
+        String subString = yyyymmdd.substring(0, 6);
+        System.out.println("subString:" + subString);
+        for (String eachDay : mAllDayKey) {
+            if (eachDay.substring(0, 6).equals(subString)) {
+                return true;
+            }
+
+        }
+
+        return false;
+
     }
 }

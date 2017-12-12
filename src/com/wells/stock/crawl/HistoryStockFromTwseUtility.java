@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,11 +37,13 @@ public class HistoryStockFromTwseUtility extends HistoryCrawl implements Seriali
 
     ArrayList<String> mTotal_querry_date_string_list = new ArrayList<String>();
 
-    public HistoryStockFromTwseUtility(String stockNum) {
+    public StockInfoFile mStockInfoFile;
+
+    public HistoryStockFromTwseUtility(String stockNum, StockInfoFile stockInfoFile) {
         // query is by month unit, we will parser it to day unit, total is 5
         // years
-
         mStockNum = stockNum;
+        mStockInfoFile = stockInfoFile;
         mKeyAllDay = new ArrayList<String>();
         mMapStockInfo = new HashMap<String, HistoryStockInfo>();
 
@@ -82,6 +85,21 @@ public class HistoryStockFromTwseUtility extends HistoryCrawl implements Seriali
             }
 
             total_querry_date_list.add(temp);
+        }
+
+        // 如果是已經下載的月份，就不需要再下載了
+        System.out.println("mStockInfoFile:" + mStockInfoFile);
+        if (mStockInfoFile != null) {
+            Iterator<Date> iterator = total_querry_date_list.iterator();
+            while (iterator.hasNext()) {
+                Date eachDate = iterator.next();
+
+                String dateString = new SimpleDateFormat("yyyyMMdd").format(eachDate);
+                if (mStockInfoFile.isIncludeTheMonth(dateString)) {
+                    iterator.remove();
+                    System.out.println("remove index:" + dateString);
+                }
+            }
         }
 
         for (int i = 0; i < total_querry_date_list.size(); i++) {
@@ -266,6 +284,11 @@ public class HistoryStockFromTwseUtility extends HistoryCrawl implements Seriali
                         // TODO Auto-generated catch block
                         e.printStackTrace();
                     }
+                }
+
+                // 原本檔案就有的資料，全部加入
+                if (mStockInfoFile != null) {
+                    mMapStockInfo.putAll(mStockInfoFile.mStockInfoMap);
                 }
 
                 // 最得mHistoryStockInfoMap的key，並排列

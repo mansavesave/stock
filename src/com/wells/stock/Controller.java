@@ -5,6 +5,7 @@ import java.io.Serializable;
 import com.wells.stock.crawl.HistoryStockFromTwseUtility;
 import com.wells.stock.data.StockInfoFile;
 import com.wells.stock.mode.Mode_find_low_variation;
+import com.wells.stock.sql.SQLiteUtility;
 
 public class Controller implements Serializable {
 
@@ -24,10 +25,18 @@ public class Controller implements Serializable {
                         stockInfoFile.save();
                     }
 
-                    Mode_find_low_variation mode_find_low_variation = new Mode_find_low_variation(
-                            stockInfoFile.mStockInfoMap, stockInfoFile.mAllDayKey);
+                    if (stockInfoFile.mAllDayKey != null) {
 
-                    mode_find_low_variation.execute();
+                    }
+
+                    // Mode_find_low_variation mode_find_low_variation = new
+                    // Mode_find_low_variation(
+                    // stockInfoFile.mStockInfoMap, stockInfoFile.mAllDayKey);
+                    //
+                    // mode_find_low_variation.execute();
+                } else {
+                    System.out.println("complete, but stockInfoFile is null");
+
                 }
 
             }
@@ -37,15 +46,24 @@ public class Controller implements Serializable {
         String stockNum = "2420";
 
         StockInfoFile stockInfoFile = StockInfoFile.load(stockNum);
-        if (stockInfoFile == null) {
-            final HistoryStockFromTwseUtility historyStockFromTwseUtility = new HistoryStockFromTwseUtility(
-                    stockNum);
+        final HistoryStockFromTwseUtility historyStockFromTwseUtility = new HistoryStockFromTwseUtility(
+                stockNum, stockInfoFile);
+        historyStockFromTwseUtility.doCrawl(callback);
 
-            historyStockFromTwseUtility.doCrawl(callback);
-        } else {
-            callback.call(stockInfoFile);
-        }
+        // if (stockInfoFile == null) {
+        // final HistoryStockFromTwseUtility historyStockFromTwseUtility = new
+        // HistoryStockFromTwseUtility(
+        // stockNum, stockInfoFile);
+        //
+        // historyStockFromTwseUtility.doCrawl(callback);
+        // } else {
+        // callback.call(stockInfoFile);
+        // }
 
+    }
+    
+    public void click_11() {
+        SQLiteUtility.runSample();
     }
 
 }

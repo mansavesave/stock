@@ -195,6 +195,16 @@ public class MainUI {
             }
         });
 
+        mJButtonList.get(11).addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                // TODO Auto-generated method stub
+                appendText("click 11");
+
+                Controller controller = new Controller();
+                controller.click_11();
+            }
+        });
+
         mJButtonList.get(12).addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
                 // TODO Auto-generated method stub
@@ -225,7 +235,8 @@ public class MainUI {
                 // TODO Auto-generated method stub
                 appendText("click 14");
                 // RealTimeStock realTimeStock = new RealTimeStock("5371");
-                RealTimeStockUtility realTimeStock = new RealTimeStockUtility(new StockInfo("2353", "tse"));
+                RealTimeStockUtility realTimeStock = new RealTimeStockUtility(new StockInfo("2353",
+                        "tse"));
                 realTimeStock.init();
                 StockInfo stockInfo = realTimeStock.getData();
                 if (stockInfo != null) {
