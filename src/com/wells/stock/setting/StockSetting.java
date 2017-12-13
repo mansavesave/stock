@@ -13,6 +13,16 @@ import java.util.Properties;
 import com.wells.stock.utility.Utility;
 
 public class StockSetting implements Serializable {
+    // public static String HISTORY_QueryDate_END = "20171130";
+    public static String HISTORY_QueryDate_END = "20170531";
+    public static String HISTORY_QueryDate_START = "20170101";
+
+    public static String[][] HistoryStockList = { { "2330", "tse", "台積電" },
+            { "2353", "tse", "宏碁" }, { "2451", "tse", "創見" }, { "2420", "tse", "新巨" } };
+
+    public static String[][] StockList = { { "2330", "tse", "台積電" }, { "2353", "tse", "宏碁" },
+            { "2451", "tse", "創見" }, { "5371", "otc", "中光電" }, { "2420", "tse", "新巨" } };
+
     public static final String Field_name = "名稱(股票號碼)";// 15
     public static final String Field_price = "現在價格";// 12
     public static final String Field_start_price = "開盤價格";// 12
@@ -31,15 +41,10 @@ public class StockSetting implements Serializable {
 
     public static String DisplayFormat;
 
-    public static String[][] StockList = { { "2330", "tse" }, { "2353", "tse" }, { "2451", "tse" },
-            { "5371", "otc" }, { "2420", "tse" } };
     public static String Property_Ready_Key = "Property_Ready_Key";
     public static File PropertyFile = new File(Utility.getWorkFolderPath(), "myProp.properties");
 
     public static SimpleDateFormat QueryDateFormat = new SimpleDateFormat("yyyyMMdd");
-
-    public static String HISTORY_QueryDate_END = "20171130";
-    public static String HISTORY_QueryDate_START = "20170101";
 
     public static void init() {
         DisplayFormat = "%-" + StockSetting.Field_name_lengh + "s\t";

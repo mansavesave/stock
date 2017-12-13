@@ -5,11 +5,14 @@ import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.text.ParseException;
+import java.util.Date;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.wells.stock.setting.StockSetting;
 import com.wells.stock.utility.Utility;
 
 public class HistoryStockInfo implements Serializable {
@@ -26,6 +29,22 @@ public class HistoryStockInfo implements Serializable {
         mStockNum = stockNum;
         mJsonRawString = jsonString;
         parser_json();
+    }
+
+    public HistoryStockInfo(String stockNum, String _date, String _transactionNumByStockUnit,
+            String _transactionStockMoney, String _startPrice, String _highPrice, String _lowPrice,
+            String _endPrice, String _gapPrice, String _transactionNumByStockCount) {
+        mStockNum = stockNum;
+        date = _date;
+        transactionNumByStockUnit = _transactionNumByStockUnit;
+        transactionStockMoney = _transactionStockMoney;
+        startPrice = _startPrice;
+        highPrice = _highPrice;
+        lowPrice = _lowPrice;
+        endPrice = _endPrice;
+        gapPrice = _gapPrice;
+        transactionNumByStockCount = _transactionNumByStockCount;
+
     }
 
     public String mJsonRawString;
@@ -49,6 +68,17 @@ public class HistoryStockInfo implements Serializable {
             if (msgArray != null) {
                 if (1 <= msgArray.length()) {
                     date = msgArray.getString(0);
+                    // System.out.println("parser raw date:" + date);
+                    String[] dateParameter = date.split("/");
+                    int tw_year = Integer.parseInt(dateParameter[0]);
+                    int month = Integer.parseInt(dateParameter[1]);
+                    int day = Integer.parseInt(dateParameter[2]);
+                    // System.out.println("tw_year:" + tw_year + " month:" +
+                    // month + " day:" + day);
+
+                    Date dateType = new Date(tw_year + 1911 - 1900, month - 1, day, 12, 0);
+                    date = StockSetting.QueryDateFormat.format(dateType);
+                    // System.out.println("date format:" + date);
                 }
                 if (2 <= msgArray.length()) {
                     transactionNumByStockUnit = msgArray.getString(1);
@@ -86,8 +116,9 @@ public class HistoryStockInfo implements Serializable {
         // TODO Auto-generated method stub
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(mJsonRawString + "\n");
-        stringBuilder.append(date + "\t" + transactionNumByStockUnit + "\t" + transactionStockMoney + "\t" + startPrice + "\t" + highPrice + "\t" + lowPrice + "\t" + endPrice
-                + "\t" + gapPrice + "\t" + transactionNumByStockCount);
+        stringBuilder.append(date + "\t" + transactionNumByStockUnit + "\t" + transactionStockMoney
+                + "\t" + startPrice + "\t" + highPrice + "\t" + lowPrice + "\t" + endPrice + "\t"
+                + gapPrice + "\t" + transactionNumByStockCount);
         return stringBuilder.toString();
     }
 

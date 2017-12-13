@@ -10,18 +10,17 @@ import com.wells.stock.data.StockInfoFile;
 public abstract class HistoryCrawl {
     public String mStockNum;
 
-    public ArrayList<String> mKeyAllDay;
     public HashMap<String, HistoryStockInfo> mMapStockInfo;
 
     public abstract void doCrawl(CallBack callBack);
 
     public StockInfoFile getStockInfoFile() {
         StockInfoFile result = null;
-        if (mStockNum == null || mKeyAllDay == null || mMapStockInfo == null) {
+        if (mStockNum == null || mMapStockInfo == null) {
             return null;
         }
 
-        result = new StockInfoFile(mStockNum, mKeyAllDay, mMapStockInfo);
+        result = new StockInfoFile(mStockNum, mMapStockInfo);
         return result;
     }
 

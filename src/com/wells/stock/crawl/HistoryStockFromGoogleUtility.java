@@ -40,7 +40,6 @@ public class HistoryStockFromGoogleUtility extends HistoryCrawl implements Seria
         // years
 
         mStockNum = stockNum;
-        mKeyAllDay = new ArrayList<String>();
         mMapStockInfo = new HashMap<String, HistoryStockInfo>();
 
         mTotal_querry_date_string_list = new ArrayList<String>();
@@ -84,8 +83,7 @@ public class HistoryStockFromGoogleUtility extends HistoryCrawl implements Seria
         }
 
         for (int i = 0; i < total_querry_date_list.size(); i++) {
-            String dateString = new SimpleDateFormat("yyyyMMdd").format(total_querry_date_list
-                    .get(i));
+            String dateString = StockSetting.QueryDateFormat.format(total_querry_date_list.get(i));
             mTotal_querry_date_string_list.add(dateString);
         }
 
@@ -267,9 +265,9 @@ public class HistoryStockFromGoogleUtility extends HistoryCrawl implements Seria
                     }
                 }
 
-                // 最得mHistoryStockInfoMap的key，並排列
-                mKeyAllDay = new ArrayList<String>(mMapStockInfo.keySet());
-                Collections.sort(mKeyAllDay);
+                // // 最得mHistoryStockInfoMap的key，並排列
+                // mKeyAllDay = new ArrayList<String>(mMapStockInfo.keySet());
+                // Collections.sort(mKeyAllDay);
 
                 if (callBack != null) {
                     callBack.call(HistoryStockFromGoogleUtility.this);

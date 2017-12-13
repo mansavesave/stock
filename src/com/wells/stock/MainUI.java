@@ -222,11 +222,10 @@ public class MainUI {
             public void actionPerformed(ActionEvent arg0) {
                 // TODO Auto-generated method stub
                 appendText("click 13");
-                appendText("current timestamp:" + Utility.getCurrentTimeStamp());
-                appendText("time foramt:" + Utility.formatTime(Utility.getCurrentTimeStamp()));
-
-                appendText("work path:" + Utility.getWorkFolderPath());
-                appendText("2330:" + StockSetting.getProperty("2330"));
+                
+                Controller controller = new Controller();
+                controller.click_13();
+                
             }
         });
 

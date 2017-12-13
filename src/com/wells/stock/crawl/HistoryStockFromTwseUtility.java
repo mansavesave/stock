@@ -10,6 +10,7 @@ import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -44,7 +45,6 @@ public class HistoryStockFromTwseUtility extends HistoryCrawl implements Seriali
         // years
         mStockNum = stockNum;
         mStockInfoFile = stockInfoFile;
-        mKeyAllDay = new ArrayList<String>();
         mMapStockInfo = new HashMap<String, HistoryStockInfo>();
 
         mTotal_querry_date_string_list = new ArrayList<String>();
@@ -64,6 +64,9 @@ public class HistoryStockFromTwseUtility extends HistoryCrawl implements Seriali
             if (temp == null) {
                 try {
                     temp = StockSetting.QueryDateFormat.parse(StockSetting.HISTORY_QueryDate_END);
+                    int year = temp.getYear();
+                    int month = temp.getMonth();
+                    temp = new Date(year, month, 1, 12, 0);
                 } catch (ParseException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
@@ -71,33 +74,36 @@ public class HistoryStockFromTwseUtility extends HistoryCrawl implements Seriali
             } else {
                 int year = temp.getYear();
                 int month = temp.getMonth();
+                month = month - 1;
                 if (month == 0) {
-                    month = 11;
+                    month = 12;
                     year = year - 1;
-                } else {
-                    month = month - 1;
                 }
                 temp = new Date(year, month, 1, 12, 0);
-
                 if (temp.getTime() < startDate.getTime()) {
                     break;
                 }
             }
 
             total_querry_date_list.add(temp);
+            // System.out.println("original need, each:" +
+            // StockSetting.QueryDateFormat.format(temp));
         }
 
         // 如果是已經下載的月份，就不需要再下載了
-        System.out.println("mStockInfoFile:" + mStockInfoFile);
+        // System.out.println("mStockInfoFile:" + mStockInfoFile);
         if (mStockInfoFile != null) {
             Iterator<Date> iterator = total_querry_date_list.iterator();
             while (iterator.hasNext()) {
                 Date eachDate = iterator.next();
 
                 String dateString = new SimpleDateFormat("yyyyMMdd").format(eachDate);
-                if (mStockInfoFile.isIncludeTheMonth(dateString)) {
+                boolean isIncludeTheMonth = mStockInfoFile.isIncludeTheMonth(dateString);
+                System.out.println("mStockInfoFile.isIncludeTheMonth(" + dateString + "):"
+                        + isIncludeTheMonth);
+                if (isIncludeTheMonth) {
                     iterator.remove();
-                    System.out.println("remove index:" + dateString);
+                    // System.out.println("remove index:" + dateString);
                 }
             }
         }
@@ -107,6 +113,12 @@ public class HistoryStockFromTwseUtility extends HistoryCrawl implements Seriali
                     .get(i));
             mTotal_querry_date_string_list.add(dateString);
         }
+
+        String totalQueryDate = "";
+        for (String each : mTotal_querry_date_string_list) {
+            totalQueryDate += each + "\t";
+        }
+        System.out.println("totalQueryDate:" + totalQueryDate);
 
     }
 
@@ -273,6 +285,8 @@ public class HistoryStockFromTwseUtility extends HistoryCrawl implements Seriali
                     HistoryStockInfo[] infoArray = parserStockJson(queryString);
                     if (infoArray != null && infoArray.length > 0) {
                         for (int j = 0; j < infoArray.length; j++) {
+                            // System.out.println("after parser:" +
+                            // infoArray[j].date);
                             mMapStockInfo.put(infoArray[j].date, infoArray[j]);
                         }
                         // System.out.println("infoArray:" + infoArray[0]);
@@ -291,9 +305,9 @@ public class HistoryStockFromTwseUtility extends HistoryCrawl implements Seriali
                     mMapStockInfo.putAll(mStockInfoFile.mStockInfoMap);
                 }
 
-                // 最得mHistoryStockInfoMap的key，並排列
-                mKeyAllDay = new ArrayList<String>(mMapStockInfo.keySet());
-                Collections.sort(mKeyAllDay);
+                // // 最得mHistoryStockInfoMap的key，並排列
+                // mKeyAllDay = new ArrayList<String>(mMapStockInfo.keySet());
+                // Collections.sort(mKeyAllDay);
 
                 if (callBack != null) {
                     StockInfoFile stockInfoFile = HistoryStockFromTwseUtility.this

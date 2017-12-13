@@ -48,6 +48,27 @@ public class SQLiteUtility {
 
     }
 
+    public boolean isTableExists(Connection con, String tableName) {
+        if (tableName == null || con == null) {
+            return false;
+        }
+        String sql = "SELECT COUNT(*) FROM sqlite_master WHERE type = \'table\' AND name = \'"
+                + tableName + "\'";
+        Statement stat = null;
+        try {
+            // System.out.println("sql:" + sql);
+            stat = con.createStatement();
+            ResultSet rs = stat.executeQuery(sql);
+            int count = rs.getInt(1);
+            return count > 0;
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return false;
+
+    }
+
     // drop table
     public void dropTable(Connection con, String tableName) throws SQLException {
         String sql = "drop table " + tableName;
@@ -111,21 +132,23 @@ public class SQLiteUtility {
         pst.executeUpdate();
     }
 
-    public void selectAll(Connection con, String tableName) throws SQLException {
+    public ResultSet selectAll(Connection con, String tableName) throws SQLException {
         String sql = "select * from " + tableName;
         Statement stat = null;
         ResultSet rs = null;
         stat = con.createStatement();
         rs = stat.executeQuery(sql);
-        while (rs.next()) {
-            String message = rs.getString("date") + "\t"
-                    + rs.getString("transaction_num_stock_unit")
-                    + rs.getString("transaction_stock_money") + rs.getString("start_price")
-                    + rs.getString("high_price") + rs.getString("low_price")
-                    + rs.getString("end_price") + rs.getString("gap_price")
-                    + rs.getString("transaction_num_of_count");
-            System.out.println(message);
-        }
+        // while (rs.next()) {
+        // String message = rs.getString("date") + "\t"
+        // + rs.getString("transaction_num_stock_unit")
+        // + rs.getString("transaction_stock_money") +
+        // rs.getString("start_price")
+        // + rs.getString("high_price") + rs.getString("low_price")
+        // + rs.getString("end_price") + rs.getString("gap_price")
+        // + rs.getString("transaction_num_of_count");
+        // System.out.println(message);
+        // }
+        return rs;
     }
 
     public static void runSample() {
@@ -166,6 +189,29 @@ public class SQLiteUtility {
             e.printStackTrace();
         }
 
+    }
+
+    public static int selectCountForStock(String stockNum) {
+        int result = 0;
+        SQLiteUtility sQLiteUtility = new SQLiteUtility();
+        Connection con;
+        try {
+            con = sQLiteUtility.getConnection();
+            // String _stockNum = "_" + stockNum;
+
+            String sql = "select COUNT(*) from " + stockNum;
+            Statement stat = null;
+            ResultSet rs = null;
+            stat = con.createStatement();
+            rs = stat.executeQuery(sql);
+            result = rs.getInt(1);
+            con.close();
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        return result;
     }
 
 }
